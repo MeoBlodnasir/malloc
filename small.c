@@ -1,3 +1,4 @@
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -6,7 +7,7 @@
 /*   By: aduban <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/25 17:42:27 by aduban            #+#    #+#             */
-/*   Updated: 2016/04/26 19:58:22 by aduban           ###   ########.fr       */
+/*   Updated: 2016/04/26 15:54:39 by aduban           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +15,12 @@
 
 static int size;
 
-int get_tiny_size()
+int get_small_size()
 {
 	return (size);
 }
 
-void set_tiny_size(int i)
+void set_small_size(int i)
 {
 	size = i;
 }
@@ -30,48 +31,41 @@ static void	*check_if_full(void *ret)
 
 	tmp = ret;
 	i = 0;
-	while (i < get_tiny_size())
+	while (i < get_small_size())
 	{
-
-
 		if ((*((t_infos*)ret)).free == 0)
 		{
 			return tmp;
 		}
-		ret += TINY_OFFSET;
-		i += TINY_OFFSET;
+		ret += SMALL_OFFSET;
+		i += SMALL_OFFSET;
 	}
-	ft_printf("NOT ENOYGH SPACE, ADDING MORE !!!\n");
-	ret = mmap(0, get_tiny_size() + (SIZE * TINY_OFFSET),
+	ret = mmap(0, get_small_size() + (SIZE * SMALL_OFFSET),
 			PROT_READ | PROT_WRITE,
 			MAP_ANON | MAP_PRIVATE, -1, 0);
-	if (ret == NULL)
-	{
-		ft_printf("ERROR MMAP");
-	}
 	i = 0;
 	void *tmp2;
 	tmp2 = ret;
-	while (i <= get_tiny_size())
+	while (i <= get_small_size())
 	{
 		(*((t_infos*)ret)).free = (*((t_infos*)tmp)).free;
 		(*((t_infos*)ret)).size = (*((t_infos*)tmp)).size;
-		ret += TINY_OFFSET;
-		tmp += TINY_OFFSET;
-		i += TINY_OFFSET;
+		ret += SMALL_OFFSET;
+		tmp += SMALL_OFFSET;
+		i += SMALL_OFFSET;
 	}
-	while (i <= get_tiny_size()) {
+	while (i <= get_small_size()) {
 		(*((t_infos*)ret)).free = 0;
 		(*((t_infos*)ret)).size = 0;
-		ret += TINY_OFFSET;
-		i += TINY_OFFSET;
+		ret += SMALL_OFFSET;
+		i += SMALL_OFFSET;
 	}
-	set_tiny_size(get_tiny_size() + SIZE*TINY_OFFSET);
+	set_small_size(get_small_size() + SIZE*SMALL_OFFSET);
 	return tmp2;
 }
 
 
-void *check_tiny_bloc()
+void *check_small_bloc()
 {
 	static void *ret;
 	if (ret != NULL)
@@ -79,14 +73,10 @@ void *check_tiny_bloc()
 		ret = check_if_full(ret);
 		return ret;
 	}
-	set_tiny_size(SIZE*TINY_OFFSET);
+	set_small_size(SIZE*SMALL_OFFSET);
 
-	ret = mmap(0, SIZE * TINY_OFFSET, PROT_READ | PROT_WRITE,
+	ret = mmap(0, SIZE * SMALL_OFFSET, PROT_READ | PROT_WRITE,
 			MAP_ANON | MAP_PRIVATE, -1, 0);
-	if (ret == NULL)
-	{
-		ft_printf("ERROR MMAP");
-	}
 	void *tmp;
 	tmp = ret;
 
@@ -96,8 +86,8 @@ void *check_tiny_bloc()
 	{
 		(*((t_infos*)ret)).free = 0;
 		(*((t_infos*)ret)).size = 0;
-		ret += TINY_OFFSET;
-		i += TINY_OFFSET;
+		ret += SMALL_OFFSET;
+		i += SMALL_OFFSET;
 	}
 	ret = tmp;
 	return tmp;
