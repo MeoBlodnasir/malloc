@@ -6,13 +6,13 @@
 /*   By: aduban <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/25 16:14:28 by aduban            #+#    #+#             */
-/*   Updated: 2016/04/26 20:50:03 by aduban           ###   ########.fr       */
+/*   Updated: 2016/04/27 14:01:10 by aduban           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-void *get_small_addr(void *bloc)
+void *get_small_addr(void *bloc, size_t size)
 {
 	int i;
 	i = 0;
@@ -21,7 +21,7 @@ void *get_small_addr(void *bloc)
 		if ((*((t_infos*)bloc)).free == 0)
 		{
 			(*((t_infos*)bloc)).free = 1;
-			(*((t_infos*)bloc)).size = SMALL;
+			(*((t_infos*)bloc)).size = size;
 			return (bloc + sizeof(t_infos));
 		}
 		bloc += SMALL + sizeof(t_infos);
@@ -32,15 +32,15 @@ void *get_small_addr(void *bloc)
 }
 
 
-void	*standard_small()
+void	*standard_small(size_t size)
 {
 	void *bloc;
 	void *ret;
 	bloc = check_small_bloc();
-	ret = get_small_addr(bloc);
+	ret = get_small_addr(bloc, size);
 	return (ret);
 }
-void *get_tiny_addr(void *bloc)
+void *get_tiny_addr(void *bloc, size_t size)
 {
 	int i;
 	i = 0;
@@ -49,7 +49,7 @@ void *get_tiny_addr(void *bloc)
 		if ((*((t_infos*)bloc)).free == 0)
 		{
 			(*((t_infos*)bloc)).free = 1;
-			(*((t_infos*)bloc)).size = TINY;
+			(*((t_infos*)bloc)).size = size;
 			return (bloc + sizeof(t_infos));
 		}
 		bloc += TINY + sizeof(t_infos);
@@ -60,12 +60,12 @@ void *get_tiny_addr(void *bloc)
 }
 
 
-void	*standard_tiny()
+void	*standard_tiny(size_t size)
 {
 	void *bloc;
 	void *ret;
 	bloc = check_tiny_bloc();
-	ret = get_tiny_addr(bloc);
+	ret = get_tiny_addr(bloc, size);
 	return (ret);
 }
 
@@ -83,11 +83,11 @@ void	*mallok(size_t size)
 {
 	if (size < TINY)
 	{
-		return (standard_tiny());
+		return (standard_tiny(size));
 	}
 	else if (size < SMALL)
 	{
-		return (standard_small());
+		return (standard_small(size));
 	}
 	else
 	{
@@ -99,7 +99,6 @@ void	*mallok(size_t size)
 int main(void)
 {
 	char *str;
-	char *str2;
 	int i;
 	i = 0;
 	str = (char *)mallok(5);
@@ -108,10 +107,14 @@ int main(void)
 	str[2] = 'a';
 	str[3] = 'a';
 	str[4] = '\0';
-	str2 = reallok(str, 10000);
-	str2[9999] = '\0';
-	ft_printf("%s\n", str);
-	str2[4] = 'b';
+	char *str2;
+	str2 = reallok(str, 10);
+	str2[4] = 'a';
+	str2[5] = 'a';
+	str2[6] = 'a';
+	str2[7] = 'a';
+	str2[8] = 'a';
+	str2[9] = '\0';
 	ft_printf("%s\n", str2);
 	return 0;
 }
