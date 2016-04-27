@@ -95,7 +95,7 @@ void	*mallok(size_t size)
 	}
 	return (NULL);
 }
-
+/*
 int main(void)
 {
 	char *str;
@@ -108,8 +108,8 @@ int main(void)
 	str[3] = 'a';
 	str[4] = '\0';
 	char *str2;
-	str2 = reallok(str, 10);
-	str2[4] = 'a';
+	str2 = (char *)reallok(str, 10);
+str2[4] = 'a';
 	str2[5] = 'a';
 	str2[6] = 'a';
 	str2[7] = 'a';
@@ -117,4 +117,87 @@ int main(void)
 	str2[9] = '\0';
 	ft_printf("%s\n", str2);
 	return 0;
+}*/
+
+int main(int argc, char **argv)
+{
+	if (argc == 2)
+	{
+		/* argv[1] malloc() and free() */
+		size_t	test_array[] = { 6, 20, 42 };
+		size_t	test_array_size = sizeof(test_array) / sizeof(test_array[0]);
+
+		size_t	count;
+		size_t	i, j;
+
+		count = atoi(argv[1]);
+
+		char	*tmp[count];
+
+		for (i = 0; i < test_array_size; i ++)
+		{
+			printf("testing %zu malloc() of size %zu\n", count, test_array[i]);
+
+			for (j = 0; j < count; j ++)
+			{
+				tmp[j] = (char *)mallok(test_array[i]);
+				if (!tmp[j])
+				{
+					count = j - 1;
+					break ;
+				}
+			}
+
+			for (j = 0; j < count; j ++)
+			{
+				freek(tmp[j]);
+			}
+
+			printf("SUCCESS\n");
+		}
+	}
+	else
+	{
+		/* realloc loop TINY to LARGE */
+#define STR						"hello world!"
+#define STR_SIZE		 sizeof("hello world!") - 1
+
+		size_t	size_max = 4096;
+		printf("Testing realloc() from %zu to %zu\n", STR_SIZE, size_max);
+
+		size_t	size;
+		char	*str;
+
+		str = mallok(STR_SIZE + 1);
+		if (!str)
+		{
+			fprintf(stderr, "mallok() failed size %zu\n", size);
+			return (1);
+		}
+		memcpy(str, STR, STR_SIZE);
+		str[STR_SIZE] = 0;
+
+		size = STR_SIZE;
+
+		while (size < size_max)
+		{
+			str = reallok(str, size + STR_SIZE + 1);
+			if (!str)
+			{
+				fprintf(stderr, "mallok() failed size %zu\n", size);
+				return (1);
+			}
+			memcpy(str + size, STR, STR_SIZE);
+			size += STR_SIZE;
+			str[size] = 0;
+
+			fprintf(stderr, "str %p %s\n", (void *)str, str);
+		}
+
+		freek(str);
+
+		printf("SUCCESS\n");
+	}
+
+	return (0);
 }

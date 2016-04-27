@@ -15,8 +15,8 @@
 # include "libft/libft.h"
 # include <sys/mman.h>
 # include <stdio.h>
-# define TINY (getpagesize() / SIZE) - sizeof(t_infos)
-# define SMALL ((getpagesize() * 4) / SIZE) - sizeof(t_infos)
+# define TINY (((getpagesize()) / SIZE) - sizeof(t_infos))
+# define SMALL (((getpagesize() * 4 ) / SIZE) - sizeof(t_infos))
 # define SIZE 100
 # define TINY_OFFSET (TINY + sizeof(t_infos))
 # define SMALL_OFFSET (SMALL + sizeof(t_infos))

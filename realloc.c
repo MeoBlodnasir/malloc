@@ -24,7 +24,6 @@ void *n_memcpy(void *dst, const void *src, size_t n)
 	i = 0;
 	while (n)
 	{
-		ft_printf("char copied: %c\n", src2[i]);
 		dst2[i] = src2[i];
 		i++;
 		n--;
@@ -40,24 +39,19 @@ void *reallok(void *ptr, size_t size)
 	{
 		ft_printf("ret is dead baby\n");
 	}
-	ft_printf("before danger, size is %d\n", (*((t_infos*)(ret - sizeof(t_infos)))).size);
 	if ((*((t_infos*)(ret - sizeof(t_infos)))).size < TINY)
 	{	
-		ft_printf("tiny\n");
-	ret = n_memcpy(ret, ptr, TINY);
+		ret = n_memcpy(ret, ptr, 5);
 
 	}
 	else if ((*((t_infos*)(ret - sizeof(t_infos)))).size < SMALL)
 	{	
-		ft_printf("small\n");
-	ret = n_memcpy(ret, ptr, SMALL);
+		ret = n_memcpy(ret, ptr, SMALL);
 	}
 	else
 	{
-		ft_printf("large\n");
-	ret = n_memcpy(ret, ptr, (*((t_infos*)(ret - sizeof(t_infos)))).size);
+		ret = n_memcpy(ret, ptr, (*((t_infos*)(ret - sizeof(t_infos)))).size);
 	}
-
 	freek(ptr);
 	return ret;
 }

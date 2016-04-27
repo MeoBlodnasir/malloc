@@ -41,7 +41,6 @@ static void	*check_if_full(void *ret)
 		ret += TINY_OFFSET;
 		i += TINY_OFFSET;
 	}
-	ft_printf("NOT ENOYGH SPACE, ADDING MORE !!!\n");
 	ret = mmap(0, get_tiny_size() + (SIZE * TINY_OFFSET),
 			PROT_READ | PROT_WRITE,
 			MAP_ANON | MAP_PRIVATE, -1, 0);

@@ -16,7 +16,7 @@ void	freek(void *ptr)
 {
 	t_infos info;
 	info = (*((t_infos*)(ptr - sizeof(t_infos))));
-	if (info.size == TINY || info.size == SMALL )
+	if (info.size <  SMALL )
 	{
 		(*((t_infos*)(ptr - sizeof(t_infos)))).size = 0; 
 		(*((t_infos*)(ptr - sizeof(t_infos)))).free = 0; 
