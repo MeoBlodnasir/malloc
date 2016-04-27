@@ -15,24 +15,35 @@
 # include "libft/libft.h"
 # include <sys/mman.h>
 # include <stdio.h>
-# define TINY (((getpagesize()) / SIZE) - sizeof(t_infos))
-# define SMALL (((getpagesize() * 4 ) / SIZE) - sizeof(t_infos))
+//# define TINY (((getpagesize()) / SIZE) - sizeof(t_infos))
+# define TINY 100
+# define SMALL 1000
+//# define SMALL (((getpagesize() * 4 ) / SIZE) - sizeof(t_infos))
 # define SIZE 100
-# define TINY_OFFSET (TINY + sizeof(t_infos))
-# define SMALL_OFFSET (SMALL + sizeof(t_infos))
+# define TINY_OFFSET (TINY + sizeof(t_area))
+# define SMALL_OFFSET (SMALL + sizeof(t_area))
 
-typedef struct	s_infos
+typedef struct s_large
 {
-	int			free;
+	void	*previous;
+	void	*next;
+}		t_large;
+typedef struct	s_area
+{
+	int		free;
 	size_t		size;
-}				t_infos;
+	void		*block;
+	t_large		large;
+}		t_area;
 
-void *check_tiny_bloc();
-void *check_small_bloc();
-int get_tiny_size();
-int get_small_size();
-void freek(void *ptr);
-void	*mallok(size_t size);
-void *reallok(void *ptr, size_t size);
+
+typedef struct s_block
+{
+	int		type;
+	int		nb_used;
+	void		*available;
+	void		*next;
+}		t_block;
+
 
 #endif
