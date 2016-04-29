@@ -6,11 +6,16 @@
 #    By: aduban <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/12/02 12:05:34 by aduban            #+#    #+#              #
-#    Updated: 2016/04/29 16:32:16 by aduban           ###   ########.fr        #
+#    Updated: 2016/04/29 16:48:40 by aduban           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = mymalloc.so
+ifeq ($(HOSTTYPE),)
+	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
+endif
+
+
+NAME = libft_malloc_$(HOSTTYPE).so
 
 SRC = malloc.c\
 	  realloc.c\
@@ -32,12 +37,13 @@ libft.a:
 
 $(NAME) : $(OBJ)
 		@gcc -Wall -Werror -Wextra -shared -o $(NAME) $(SRC) -L./libft/ -lftprintf -I ./libft
+		ln -s libft_malloc_$(HOSTTYPE).so libft_malloc.so
 
 %.o: %.c
 		@gcc -Wall -Werror -Wextra -I./libft/ -o $@ -c $^
 
 clean :
-		rm -f $(OBJ)
+		rm -f $(OBJ) libft_malloc_$(HOSTTYPE).so libft_malloc.so
 
 fclean : clean
 		rm -f $(NAME)

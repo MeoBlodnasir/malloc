@@ -6,7 +6,7 @@
 /*   By: aduban <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/29 16:03:22 by aduban            #+#    #+#             */
-/*   Updated: 2016/04/29 16:08:22 by aduban           ###   ########.fr       */
+/*   Updated: 2016/04/29 17:14:34 by aduban           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,15 @@ void	handle_small(t_area *area)
 		free_block(block);
 }
 
-void	freek(void *ptr)
+void	free(void *ptr)
 {
 	t_area	*area;
 	int		ret;
 	t_area	*prev;
 	t_area	*next;
 
+	if (ptr == NULL)
+		return ;
 	area = ptr - sizeof(t_area);
 	if (area->size < SMALL)
 		return (handle_small(area));
