@@ -63,22 +63,16 @@ void	set_small(void *ptr)
 
 void	*get_correct_block(int type)
 {
-	void *tiny;
-	void *small;
-	tiny = get_tiny();
-	small = get_small();
 	t_block	*tmp;
 
 	if (type == TINY && tiny == NULL)
 	{
 		tiny = generate_block(type, NULL, NULL);
-		set_tiny(tiny);
 		return tiny;
 	}
 	else if (type == SMALL && small == NULL)
 	{
 		small = generate_block(type, NULL, NULL);
-		set_small(small);
 		return small;
 	}
 	tmp = type == TINY ? tiny : small;
@@ -88,7 +82,7 @@ void	*get_correct_block(int type)
 	}
 	while (tmp->next != NULL)
 	{
-		if (tmp->nb_used <= SIZE)
+		if (tmp->nb_used < SIZE)
 		{
 			return tmp;
 		}
@@ -101,6 +95,7 @@ void	*get_correct_block(int type)
 
 void	*get_correct_area(size_t size, void *block)
 {
+
 	int i;
 	int block_size;
 	int type;
@@ -202,34 +197,35 @@ void	*mallok(size_t size)
 		return handle_large(size);
 	}
 	return NULL;
-
-
 }
+/*
    int main()
    {
 	   char *str;
 	   int i = 0;
-	   while (i < 10)
+	   char **tab;
+	   tab = (char **)malloc(sizeof(char *) * 150);
+	   while (i < 150)
 	   {
-		   str = (char *)mallok(sizeof(char) * i);
-		   i++;
-	   }
-	   i = 0;
-	   while (i < 10)
-	   {
-		   str = (char *)mallok(sizeof(char) * (i + 2000));
-		   i++;
-	   }
-	   i = 0;
-	   while (i < 10)
-	   {
-		   str = (char *)mallok(sizeof(char) * (i + 100000));
+		   str = (char *)mallok(5);
+		   tab[i] = str;
 		   i++;
 	   }
 	   show_alloc_mem();
+	   i = 0;
+	   while (i < 150)
+	   {
+		   ft_printf("index = %d\n", i);
+		   freek(tab[i]);
+			   i++;
+		if (i % 10 == 0)
+		{
 
-   }
-   /*
+	   show_alloc_mem();
+		}
+	   }
+
+   }*/
 int main(int argc, char **argv)
 {
 	if (argc == 2)
@@ -261,6 +257,7 @@ int main(int argc, char **argv)
 			for (j = 0; j < count; j ++)
 			{
 				freek(tmp[j]);
+				ft_printf("index : %d\n", j);
 			}
 
 			printf("SUCCESS\n");
@@ -311,4 +308,3 @@ int main(int argc, char **argv)
 
 	return (0);
 }
-*/

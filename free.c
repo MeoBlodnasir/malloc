@@ -14,6 +14,8 @@ void	free_block(t_block *block)
 		{
 			set_tiny(next);
 		}
+		else
+			set_tiny(NULL);
 	}
 	if (next != NULL)
 		next->previous = prev;

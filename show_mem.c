@@ -54,7 +54,10 @@ void	show_large(void *ptr)
 void	show_alloc_mem()
 {
 
-	show_tiny(get_tiny(), "TINY");
-	show_tiny(get_small(), "SMALL");
-	show_large(get_large());
+	if (get_tiny() != NULL)
+		show_tiny(get_tiny(), "TINY");
+	if (get_small() != NULL)
+		show_tiny(get_small(), "SMALL");
+	if (get_large() != NULL)
+		show_large(get_large());
 }
