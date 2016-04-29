@@ -1,5 +1,22 @@
 #include "malloc.h"
 
+
+void	fill_area(void *tmp, int block_size, void *map, int type)
+{
+	int i;
+	i = sizeof(t_block);;
+	tmp += sizeof(t_block);
+	while (i < block_size)
+	{
+		(*((t_area*)tmp)).free = 0;
+		(*((t_area*)tmp)).size = 0;
+		(*((t_area*)tmp)).block = map;
+		i += type + sizeof(t_area);
+		tmp += type + sizeof(t_area);
+	}
+
+}
+
 void	*generate_block(int type, void *previous, void *next)
 {
 	int block_size;
@@ -13,7 +30,10 @@ void	*generate_block(int type, void *previous, void *next)
 			PROT_READ | PROT_WRITE,
 			MAP_ANON | MAP_PRIVATE, -1, 0);
 	if (map == NULL)
+	{
 		ft_printf("Error with mmap\n");
+		return (NULL);
+	}
 	block = map;
 	block->nb_used = 0;
 	block->size = block_size;
@@ -21,23 +41,15 @@ void	*generate_block(int type, void *previous, void *next)
 	block->available = map + sizeof(t_block);
 	block->next = next;
 	block->previous = previous;
-
-	i = sizeof(t_block);;
+	i = sizeof(t_block);
 	tmp = map;
-	tmp += sizeof(t_block);
-	while (i < block_size)
-	{
-		(*((t_area*)tmp)).free = 0;
-		(*((t_area*)tmp)).size = 0;
-		(*((t_area*)tmp)).block = map;
-		i += type + sizeof(t_area);
-		tmp += type + sizeof(t_area);
-	}
+	fill_area(tmp, block_size, map, type);
 	return map;
 }
 
 
 static void *tiny;
+
 void	*get_tiny()
 {
 	return tiny;
@@ -133,6 +145,8 @@ void	*generate_large_area(size_t size, void *prev, void *next)
 	map = mmap(0, size + sizeof(t_area) ,
 			PROT_READ | PROT_WRITE,
 			MAP_ANON | MAP_PRIVATE, -1, 0);
+	if (map == NULL)
+		return (NULL);
 	area = map;
 	area->free = 1;
 	area->large.previous = prev;
@@ -162,6 +176,8 @@ void	*handle_large(size_t size)
 	if (large == NULL)
 	{
 		large = generate_large_area(size, NULL, NULL);
+		if (large == NULL)
+			return (NULL);
 		set_large(large);
 		return (large + sizeof(t_area));
 	}
@@ -189,7 +205,11 @@ void	*mallok(size_t size)
 		if (size < TINY)
 			type = TINY;
 		block = get_correct_block(type);
+		if (block == NULL)
+			return (NULL);
 		area = get_correct_area(size, block);
+		if (area == NULL)
+			return (NULL);
 		return (area + sizeof(t_area));
 	}
 	else
