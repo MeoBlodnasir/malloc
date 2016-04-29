@@ -1,9 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aduban <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/04/29 16:03:22 by aduban            #+#    #+#             */
+/*   Updated: 2016/04/29 16:08:22 by aduban           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "malloc.h"
 
 void	free_block(t_block *block)
 {
-	t_block *prev;
-	t_block *next;
+	t_block	*prev;
+	t_block	*next;
+	int		ret;
+
 	prev = block->previous;
 	next = block->next;
 	if (prev != NULL)
@@ -19,8 +33,7 @@ void	free_block(t_block *block)
 	}
 	if (next != NULL)
 		next->previous = prev;
-	int ret;
-	ret = munmap(block, block->size); 
+	ret = munmap(block, block->size);
 	if (ret != 0)
 	{
 		perror("");
@@ -28,37 +41,36 @@ void	free_block(t_block *block)
 	}
 }
 
+void	handle_small(t_area *area)
+{
+	t_block	*block;
+
+	area->free = 0;
+	area->size = 0;
+	block = area->block;
+	block->nb_used -= 1;
+	if (block->nb_used <= 0)
+		free_block(block);
+}
+
 void	freek(void *ptr)
 {
-	t_area *area;
-	t_block *block;
+	t_area	*area;
+	int		ret;
+	t_area	*prev;
+	t_area	*next;
+
 	area = ptr - sizeof(t_area);
 	if (area->size < SMALL)
-	{
-		area->free = 0;
-		area->size = 0;
-		block = area->block;
-		block->nb_used -= 1;
-		if (block->nb_used <= 0)
-			free_block(block);
-		return ;
-	}
-	t_area *prev;
-	t_area *next;
+		return (handle_small(area));
 	prev = area->large.previous;
 	next = area->large.next;
 	if (prev != NULL)
 		prev->large.next = next;
-	else
-	{
-		if (next != NULL)
-		{
-			set_large(next);
-		}
-	}
+	else if (next != NULL)
+		set_large(next);
 	if (next != NULL)
 		next->large.previous = prev;
-	int ret;
 	ret = munmap(ptr - sizeof(t_area), area->size + sizeof(t_area));
 	if (ret != 0)
 	{

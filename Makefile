@@ -6,13 +6,20 @@
 #    By: aduban <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/12/02 12:05:34 by aduban            #+#    #+#              #
-#    Updated: 2016/04/25 16:21:21 by aduban           ###   ########.fr        #
+#    Updated: 2016/04/29 16:32:16 by aduban           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = mymalloc.so
 
 SRC = malloc.c\
+	  realloc.c\
+	  free.c\
+	  getsetters.c\
+	  large_getsetters.c\
+	  large_malloc.c\
+	  show_mem.c\
+	  small_malloc.c
 
 .PHONY: libft.a
 

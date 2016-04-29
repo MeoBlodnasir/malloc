@@ -1,39 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   malloc.c                                           :+:      :+:    :+:   */
+/*   large_getsetters.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aduban <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/04/29 15:54:42 by aduban            #+#    #+#             */
-/*   Updated: 2016/04/29 16:29:45 by aduban           ###   ########.fr       */
+/*   Created: 2016/04/29 16:25:06 by aduban            #+#    #+#             */
+/*   Updated: 2016/04/29 16:25:24 by aduban           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-void	*malloc(size_t size)
-{
-	void	*block;
-	void	*area;
-	int		type;
+static void *g_large;
 
-	if (size < SMALL)
-	{
-		type = SMALL;
-		if (size < TINY)
-			type = TINY;
-		block = get_correct_block(type);
-		if (block == NULL)
-			return (NULL);
-		area = get_correct_area(size, block, type);
-		if (area == NULL)
-			return (NULL);
-		return (area + sizeof(t_area));
-	}
-	else
-	{
-		return (handle_large(size));
-	}
-	return (NULL);
+void	*get_large(void)
+{
+	return (g_large);
+}
+
+void	set_large(void *ptr)
+{
+	g_large = ptr;
 }
