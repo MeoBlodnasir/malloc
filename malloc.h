@@ -15,6 +15,8 @@
 # include "libft/libft.h"
 # include <sys/mman.h>
 # include <stdio.h>
+# include <sys/time.h>
+# include <sys/resource.h>
 # define TINY (((getpagesize()*4) - sizeof(t_block)) / SIZE) - sizeof(t_area)
 # define SMALL (((getpagesize()*100) - sizeof(t_block)) / SIZE) - sizeof(t_area)
 # define SIZE 100
@@ -55,9 +57,10 @@ void			set_tiny(void *ptr);
 void			set_small(void *ptr);
 void			set_large(void *ptr);
 void			set_large(void *ptr);
-void			*malloc(size_t size);
+void			*mallok(size_t size);
 void			*realloc(void *ptr, size_t size);
 void			show_alloc_mem();
 void			*handle_large(size_t size);
 void			*get_correct_area(size_t size, void *block, int type);
+int			add_and_check(unsigned long long l);
 #endif

@@ -12,7 +12,7 @@
 
 #include "malloc.h"
 
-void	*malloc(size_t size)
+void	*mallok(size_t size)
 {
 	void	*block;
 	void	*area;

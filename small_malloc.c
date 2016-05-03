@@ -37,6 +37,9 @@ void	*generate_block(int type, void *previous, void *next)
 	void	*tmp;
 
 	block_size = sizeof(t_block) + (SIZE * (sizeof(t_area) + type));
+	i = add_and_check(block_size);
+	if (i == -1)
+		return (NULL);
 	map = mmap(0, block_size,
 			PROT_READ | PROT_WRITE,
 			MAP_ANON | MAP_PRIVATE, -1, 0);
