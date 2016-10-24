@@ -6,7 +6,7 @@
 /*   By: aduban <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/29 16:28:41 by aduban            #+#    #+#             */
-/*   Updated: 2016/04/29 16:30:54 by aduban           ###   ########.fr       */
+/*   Updated: 2016/10/24 19:29:55 by aduban           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,9 @@ void	*generate_block(int type, void *previous, void *next)
 	i = add_and_check(block_size);
 	if (i == -1)
 		return (NULL);
-	map = mmap(0, block_size,
+	if ((map = mmap(0, block_size,
 			PROT_READ | PROT_WRITE,
-			MAP_ANON | MAP_PRIVATE, -1, 0);
-	if (map == NULL)
+			MAP_ANON | MAP_PRIVATE, -1, 0)) == NULL)
 		return (NULL);
 	block = map;
 	block->nb_used = 0;

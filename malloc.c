@@ -6,13 +6,13 @@
 /*   By: aduban <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/29 15:54:42 by aduban            #+#    #+#             */
-/*   Updated: 2016/04/29 17:18:10 by aduban           ###   ########.fr       */
+/*   Updated: 2016/10/24 17:26:37 by aduban           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-void	*mallok(size_t size)
+void	*malloc(size_t size)
 {
 	void	*block;
 	void	*area;
