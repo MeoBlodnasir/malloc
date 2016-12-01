@@ -6,7 +6,7 @@
 #    By: aduban <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/12/02 12:05:34 by aduban            #+#    #+#              #
-#    Updated: 2016/04/29 16:48:40 by aduban           ###   ########.fr        #
+#    Updated: 2016/12/01 17:35:28 by aduban           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,22 @@ ifeq ($(HOSTTYPE),)
 endif
 
 
-NAME = libft_malloc_$(HOSTTYPE).so
+CC=clang
+FLAGS=-Wall -Wextra -Werror
+
+NAME=libft_malloc_$(HOSTTYPE).so
+
+LIBS_DIR=./libs
+DIR_PRINTF=$(LIBS_DIR)/printf
+DIR_LIBFT=$(LIBS_DIR)/libft
+
+LIBS=-L $(DIR_PRINTF) -lprintf -L $(DIR_LIBFT) -lft
+
+SRC_DIR=srcs
+INCLUDES=-I ./ -I ./includes -I $(DIR_PRINTF) -I $(DIR_LIBFT)
+
+BUILD_DIR= __build
+
 
 SRC = malloc.c\
 	  realloc.c\
@@ -24,28 +39,37 @@ SRC = malloc.c\
 	  large_getsetters.c\
 	  large_malloc.c\
 	  show_mem.c\
-	  small_malloc.c
+	  small_malloc.c \
+	  handle_limit.c \
+	  utils.c
 
-.PHONY: libft.a
 
-OBJ = $(SRC:.c=.o)
+OBJ=$(addprefix $(BUILD_DIR)/,$(SRC:.c=.o))
 
-all : libft.a $(NAME)
+all:$(BUILD_DIR) $(NAME)
 
-libft.a:
-		@$(MAKE) -C ./libft
+$(BUILD_DIR):
+	@mkdir -p $@
 
-$(NAME) : $(OBJ)
-		@gcc -Wall -Werror -Wextra -shared -o $(NAME) $(SRC) -L./libft/ -lftprintf -I ./libft
-		ln -s libft_malloc_$(HOSTTYPE).so libft_malloc.so
+exec:
+	@make -C $(DIR_LIBFT)
+	@make -C $(DIR_PRINTF)
 
-%.o: %.c
-		@gcc -Wall -Werror -Wextra -I./libft/ -o $@ -c $^
+$(BUILD_DIR)/%.o:$(SRC_DIR)/%.c
+	@$(CC) $(FLAGS) -fPIC -c $< -o $@ $(INCLUDES)
 
-clean :
-		rm -f $(OBJ) libft_malloc_$(HOSTTYPE).so libft_malloc.so
+$(NAME):exec $(OBJ)
+	@$(CC) $(FLAGS) $(OBJ) $(LIBS) -shared -o $@
+	@echo "$@ was created"
+	@ln -f -s libft_malloc_$(HOSTTYPE).so libft_malloc.so
 
-fclean : clean
-		rm -f $(NAME)
+clean:
+	@rm -rf $(BUILD_DIR)
+	@rm -f libft_malloc.so
 
-re : fclean all
+fclean: clean
+	@rm -f $(NAME) $(TEST)
+	@make $@ -C $(DIR_LIBFT)
+	@make $@ -C $(DIR_PRINTF)
+
+re: fclean all
