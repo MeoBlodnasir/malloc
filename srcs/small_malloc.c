@@ -6,7 +6,7 @@
 /*   By: aduban <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/29 16:28:41 by aduban            #+#    #+#             */
-/*   Updated: 2016/12/01 18:15:04 by aduban           ###   ########.fr       */
+/*   Updated: 2016/12/05 13:22:01 by aduban           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,17 @@ void	fill_area(void *tmp, int block_size, void *map, int type)
 	}
 }
 
+int	set_block_size(int type)
+{
+	int block_size;
+	block_size = sizeof(t_block) + (SIZE * (sizeof(t_area) + type));
+	if (block_size % getpagesize() != 0)
+	{
+		block_size += block_size % getpagesize();
+	}
+	return block_size;
+}
+
 void	*generate_block(int type, void *previous, void *next)
 {
 	int		block_size;
@@ -43,13 +54,13 @@ void	*generate_block(int type, void *previous, void *next)
 	t_block	*block;
 	void	*tmp;
 
-	block_size = sizeof(t_block) + (SIZE * (sizeof(t_area) + type));
+	block_size = set_block_size(type);
 	i = add_and_check(block_size);
 	if (i == -1)
 		return (NULL);
 	if ((map = mmap(0, block_size,
-			PROT_READ | PROT_WRITE,
-			MAP_ANON | MAP_PRIVATE, -1, 0)) == NULL)
+					PROT_READ | PROT_WRITE,
+					MAP_ANON | MAP_PRIVATE, -1, 0)) == NULL)
 		return (NULL);
 	block = map;
 	block->nb_used = 0;
@@ -124,9 +135,10 @@ void	*get_correct_area(size_t size, void *block, int type)
 			area->size = size;
 			area->magic = 0xdeadbeef;
 			ft_printf("magic set\n");
-			b = block;
+
+			b = area->block;
 			ft_printf("b set\n");
-			if (b == NULL)
+			if (area->block == NULL)
 				ft_printf("b is nil...\n");
 			b->nb_used += 1;
 			ft_printf("gonna return now\n");

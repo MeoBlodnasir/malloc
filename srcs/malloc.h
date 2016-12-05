@@ -6,7 +6,7 @@
 /*   By: aduban <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/25 16:13:20 by aduban            #+#    #+#             */
-/*   Updated: 2016/12/01 18:19:21 by aduban           ###   ########.fr       */
+/*   Updated: 2016/12/05 14:02:39 by aduban           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 # include <sys/time.h>
 # include <unistd.h>
 # include <sys/resource.h>
-# define TINY 128
-# define SMALL 512
+# define TINY (128 - sizeof(t_area))
+# define SMALL (512 - sizeof(t_area))
 # define SIZE 100
 # define TINY_OFFSET (TINY + sizeof(t_area))
 # define SMALL_OFFSET (SMALL + sizeof(t_area))

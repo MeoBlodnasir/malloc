@@ -6,7 +6,7 @@
 /*   By: aduban <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/29 15:54:42 by aduban            #+#    #+#             */
-/*   Updated: 2016/12/01 18:18:13 by aduban           ###   ########.fr       */
+/*   Updated: 2016/12/05 12:39:02 by aduban           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ void	*malloc(size_t size)
 	void	*area;
 	int		type;
 
-	ft_printf("TINY = %lu\n", TINY);
-	ft_printf("TINY = %lu\n", SMALL);
 	if (size < SMALL)
 	{
 		ft_printf("small malloc\n");
@@ -37,7 +35,11 @@ void	*malloc(size_t size)
 		area = get_correct_area(size, block, type);
 		ft_printf("got correct area\n");
 		if (area == NULL)
+		{
+			printf("Area is nil\n");
 			return (NULL);
+		}
+		printf("returning from malloc\n");
 		return (area + sizeof(t_area));
 	}
 	else
